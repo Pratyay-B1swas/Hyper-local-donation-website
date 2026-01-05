@@ -57,7 +57,7 @@ export const AccessibilityBtn: React.FC = () => {
             {/* Floating Panel */}
             {isOpen && (
                 <div
-                    className="absolute bottom-16 left-0 w-64 bg-background border border-border rounded-xl shadow-xl overflow-hidden animate-in slide-in-from-bottom-2 fade-in duration-200"
+                    className="absolute bottom-0 left-16 w-64 bg-background border border-border rounded-xl shadow-xl overflow-hidden animate-in slide-in-from-left-2 fade-in duration-200"
                     style={{ maxHeight: 'calc(100vh - 120px)', overflowY: 'auto' }}
                 >
                     {/* Header */}

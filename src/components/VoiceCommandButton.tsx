@@ -215,7 +215,7 @@ export const VoiceCommandButton: React.FC = () => {
     }
   }, [handleCommand]);
 
-  const toggleListening = () => {
+  const toggleListening = useCallback(() => {
     if (!recognition) {
         toast.error("Voice commands not supported in this browser.");
         return;
@@ -226,7 +226,53 @@ export const VoiceCommandButton: React.FC = () => {
     } else {
       recognition.start();
     }
-  };
+  }, [recognition, isListening]);
+
+  // Global "Hold to Speak" logic
+  useEffect(() => {
+    let timer: NodeJS.Timeout | null = null;
+    const holdDuration = 800; // ms
+
+    const startTimer = () => {
+        // Prevent interfering with other interactions if we are already listening
+        if (isListening) return;
+
+        timer = setTimeout(() => {
+            if (recognition && !isListening) {
+                 recognition.start();
+                 // Feedback is handled by recognition.onstart
+            }
+        }, holdDuration);
+    };
+
+    const clearTimer = () => {
+        if (timer) {
+            clearTimeout(timer);
+            timer = null;
+        }
+    };
+
+    // Attach listeners to window for global coverage
+    window.addEventListener('mousedown', startTimer);
+    window.addEventListener('touchstart', startTimer);
+
+    window.addEventListener('mouseup', clearTimer);
+    window.addEventListener('touchend', clearTimer);
+
+    // Clear on scroll/move to prevent triggering while scrolling
+    window.addEventListener('mousemove', clearTimer);
+    window.addEventListener('touchmove', clearTimer);
+
+    return () => {
+        window.removeEventListener('mousedown', startTimer);
+        window.removeEventListener('touchstart', startTimer);
+        window.removeEventListener('mouseup', clearTimer);
+        window.removeEventListener('touchend', clearTimer);
+        window.removeEventListener('mousemove', clearTimer);
+        window.removeEventListener('touchmove', clearTimer);
+        if (timer) clearTimeout(timer);
+    };
+  }, [recognition, isListening]);
 
   return (
     <div className="fixed bottom-20 left-6 z-50">

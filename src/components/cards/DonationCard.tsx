@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { DonationListing, CATEGORIES } from '@/lib/supabase-types';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,7 +13,10 @@ interface DonationCardProps {
   showActions?: boolean;
 }
 
-export function DonationCard({ listing, onContact, showActions = true }: DonationCardProps) {
+// Using React.memo to prevent unnecessary re-renders of the component
+// if its props have not changed. This is particularly useful when the
+// component is part of a list that might re-render frequently.
+export const DonationCard = memo(({ listing, onContact, showActions = true }: DonationCardProps) => {
   const category = CATEGORIES.find(c => c.value === listing.category);
   const profile = listing.profiles;
 
@@ -85,4 +89,4 @@ export function DonationCard({ listing, onContact, showActions = true }: Donatio
       </CardFooter>
     </Card>
   );
-}
+});

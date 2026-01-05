@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { NgoRequest, CATEGORIES } from '@/lib/supabase-types';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -14,7 +15,10 @@ interface RequestCardProps {
   showActions?: boolean;
 }
 
-export function RequestCard({ request, onPledge, showActions = true }: RequestCardProps) {
+// Using React.memo to prevent unnecessary re-renders of the component
+// if its props have not changed. This is particularly useful when the
+// component is part of a list that might re-render frequently.
+export const RequestCard = memo(({ request, onPledge, showActions = true }: RequestCardProps) => {
   const category = CATEGORIES.find(c => c.value === request.category);
   const profile = request.profiles;
   const progress = Math.min((request.quantity_pledged / request.quantity_needed) * 100, 100);
@@ -117,4 +121,4 @@ export function RequestCard({ request, onPledge, showActions = true }: RequestCa
       </CardFooter>
     </Card>
   );
-}
+});

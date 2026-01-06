@@ -307,7 +307,7 @@ export const VoiceCommandButton: React.FC = () => {
 
   return (
     <>
-      <div className="fixed bottom-20 left-6 z-50 flex items-center gap-2">
+      <div className="fixed bottom-20 left-6 z-50 flex flex-col items-center gap-3">
         <Button
           onClick={() => setIsHelpOpen(true)}
           size="icon"
